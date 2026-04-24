@@ -54,7 +54,14 @@ def format_entry(
 
     Returns:
         Formatted string, or None if the format is unsupported.
+
+    Raises:
+        ValueError: If fmt is not one of the supported formats.
     """
+    if fmt not in SUPPORTED_FORMATS:
+        raise ValueError(
+            f"Unsupported format {fmt!r}. Must be one of: {', '.join(SUPPORTED_FORMATS)}"
+        )
     if fmt == "json":
         return format_json(entry)
     if fmt == "logfmt":
