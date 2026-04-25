@@ -41,6 +41,13 @@ class TestBuildPivot:
         pivot = build_pivot(entries, "service", "level")
         assert "__missing__" in pivot
 
+    def test_missing_col_field_uses_sentinel(self):
+        """Entries missing the col field should be counted under '__missing__'."""
+        entries = [{"service": "web", "msg": "x"}]
+        pivot = build_pivot(entries, "service", "level")
+        assert "__missing__" in pivot["web"]
+        assert pivot["web"]["__missing__"] == 1
+
 
 class TestPivotToRows:
     def test_headers_start_with_row_key(self):
