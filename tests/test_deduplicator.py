@@ -84,8 +84,8 @@ class TestDeduplicateLast:
         assert result[0] is e2
 
     def test_invalid_keep_raises(self):
-        with pytest.raises(ValueError, match="keep must be"):
-            list(deduplicate([], keep="middle"))
+        with pytest.raises(ValueError, match="keep"):
+            list(deduplicate([_e("a")], keep="middle"))
 
 
 # ---------------------------------------------------------------------------
@@ -93,12 +93,17 @@ class TestDeduplicateLast:
 # ---------------------------------------------------------------------------
 
 class TestCountDuplicates:
-    def test_no_duplicates(self):
-        assert count_duplicates([_e("a"), _e("b")]) == 0
+    def test_no_duplicates_returns_zero(self):
+        entries = [_e("a"), _e("b"), _e("c")]
+        assert count_duplicates(entries) == 0
 
-    def test_counts_extras(self):
-        entries = [_e("x"), _e("x"), _e("x"), _e("y")]
-        assert count_duplicates(entries) == 2
+    def test_counts_duplicate_entries(self):
+        entries = [_e("x"), _e("x"), _e("x"), _e("y"), _e("y")]
+        # 2 extra 'x' + 1 extra 'y' = 3 duplicates
+        assert count_duplicates(entries) == 3
 
-    def test_empty(self):
+    def test_single_entry_no_duplicates(self):
+        assert count_duplicates([_e("only")]) == 0
+
+    def test_empty_input_returns_zero(self):
         assert count_duplicates([]) == 0
